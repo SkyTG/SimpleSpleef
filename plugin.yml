@@ -9,7 +9,13 @@ commands:
   description: Admin commands for SimpleSpleef
   permission: simplespleef.arena.admin
   usage: Visit the documentation for more info
+ spleef:
+  description: Spleef commands for joining/leaving
+  permission: simplespleef.arena.join
 permissions:
   simplespleef.arena.admin:
    default: op
    description: Allows you to create/edit arenas
+  simplespleef.arena.join:
+   default: true
+   description: Allows you to join/leave spleef arenas

@@ -103,6 +103,7 @@ class Arena extends PluginTask implements Listener{
         if($this->enabled == true)
         {
             $this->players[$player->getName()] = $player;
+            $player->arena = $this;
         }
         else
         {
@@ -119,6 +120,7 @@ class Arena extends PluginTask implements Listener{
         if(isset($this->players[$player->getName()]))
         {
             unset($this->players[$player->getName()]);
+            unset($player->arena);
             $player->teleport(Server::getInstance()->getDefaultLevel()->getSafeSpawn());
             return true;
         }

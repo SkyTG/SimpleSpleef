@@ -105,7 +105,6 @@ class Main extends PluginBase {
         switch($command->getName())
         {
             case 'ss':
-
                     switch($args[0])
                     {
                         case 'arena':
@@ -163,7 +162,32 @@ class Main extends PluginBase {
                                 }
                             break;
                     }
-
+                break;
+            case 'spleef':
+                    if($sender instanceof Player)
+                    {
+                        switch($args[0])
+                        {
+                            case 'join':
+                                    $arena = $this->getArenaByName($args[1]);
+                                    if($arena instanceof Arena)
+                                    {
+                                        $arena->addPlayer($sender);
+                                    }
+                                break;
+                            case 'leave':
+                                    $arena = $sender->arena;
+                                    if($arena instanceof Arena)
+                                    {
+                                        $arena->removePlayer($sender);
+                                    }
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        $sender->sendMessage(TextFormat::RED."Please run this command in-game.");
+                    }
                 break;
         }
     }
