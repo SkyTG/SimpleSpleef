@@ -2,12 +2,15 @@
 
 namespace SimpleSpleef\Arena;
 
+use pocketmine\block\Block;
+use pocketmine\block\Snow;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\item\ItemBlock;
 use pocketmine\level\Position;
+use pocketmine\math\Vector3;
 use pocketmine\Player;
 use pocketmine\scheduler\PluginTask;
 use pocketmine\Server;
@@ -92,6 +95,48 @@ class Arena extends PluginTask implements Listener{
                 }
             }
         }
+        if($this->second == -180)
+        {
+            $this->resetArena();
+        }
+
+
+        if($this->second < 0)
+        {
+            if(count($this->players) < 2)
+            {
+                $this->resetArena();
+            }
+        }
+    }
+
+    /*
+     * Resets the arena
+     */
+    public function resetArena()
+    {
+        foreach($this->players as $p)
+        {
+            if($p instanceof Player)
+            {
+                $p->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."The round is over.");
+                $this->removePlayer($p);
+            }
+        }
+        $this->enabled = false;
+        foreach($this->broken as $block)
+        {
+            if($block instanceof Position)
+            {
+                $level = $block->getLevel();
+                $x = $block->getX();
+                $y = $block->getY();
+                $z = $block->getZ();
+                $level->setBlock(new Vector3($x, $y, $z), Block::get(Block::SNOW_BLOCK));
+            }
+        }
+        $this->active = false;
+        $this->enabled = true;
     }
 
     /*
@@ -104,6 +149,7 @@ class Arena extends PluginTask implements Listener{
         {
             $this->players[$player->getName()] = $player;
             $player->arena = $this;
+            $player->teleport($this->getSpawn());
         }
         else
         {

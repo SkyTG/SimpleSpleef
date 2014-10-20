@@ -1,11 +1,3 @@
-# How long should a round be? (in seconds)
-time: 180
-
-# Should a player be kicked from the server after it looses?
-# false = no, port back to spawn
-# true = yes, kick it
-kick: false
-
 # Drop snowballs?
 drop: false
 
