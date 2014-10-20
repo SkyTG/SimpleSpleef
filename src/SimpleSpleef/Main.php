@@ -2,8 +2,13 @@
 
 namespace SimpleSpleef;
 
+use pocketmine\command\Command;
+use pocketmine\command\CommandSender;
 use pocketmine\level\Position;
+use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
+use pocketmine\utils\TextFormat;
+use pocketmine\utils\TextWrapper;
 use SimpleSpleef\Arena\Arena;
 
 class Main extends PluginBase {
@@ -86,6 +91,62 @@ class Main extends PluginBase {
         $spawn = new Position($spawn[0], $spawn[1], $spawn[2], $this->getServer()->getLevelByName($spawn[3]));
         $arena = $this->createArena($data["name"], $spawn);
         return $arena;
+    }
+
+
+
+
+    /*
+     * Command Handler
+     */
+    public function onCommand(CommandSender $sender, Command $command, $label, array $args)
+    {
+        switch($command->getName())
+        {
+            case 'ss':
+
+                    switch($args[0])
+                    {
+                        case 'arena':
+                                switch($args[1])
+                                {
+                                    case 'create':
+                                            if($sender instanceof Player)
+                                            {
+                                                $spawn = $sender->getPosition();
+                                                $arena = $this->createArena($args[2], $spawn);
+                                                if($arena != false)
+                                                {
+                                                    $sender->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."Created arena ".$args[2]);
+                                                }
+                                                else
+                                                {
+                                                    $sender->sendMessage(TextFormat::DARK_RED."Error while creating the arena.");
+                                                }
+                                            }
+                                        break;
+                                    case 'edit':
+                                            switch($args[2])
+                                            {
+                                                case 'spawn':
+                                                        if($sender instanceof Player)
+                                                        {
+                                                            $arena = $this->getArenaByName($args[3]);
+                                                            if($arena instanceof Arena)
+                                                            {
+                                                                $arena->setSpawn($sender->getPosition());
+                                                                $sender->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."Set new arena spawn.");
+                                                            }
+                                                        }
+                                                    break;
+                                            }
+                                        break;
+                                }
+                            break;
+                    }
+
+                break;
+        }
     }
 
 } 
