@@ -2,12 +2,15 @@
 
 namespace SimpleSpleef\Arena;
 
+use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\player\PlayerQuitEvent;
+use pocketmine\item\ItemBlock;
 use pocketmine\level\Position;
 use pocketmine\Player;
 use pocketmine\Server;
+use pocketmine\utils\TextFormat;
 use SimpleSpleef\Main;
 
 class Arena implements Listener{
@@ -23,6 +26,15 @@ class Arena implements Listener{
 
     //The main plugin
     private $plugin;
+
+    //All broken snow blocks
+    private $broken = array();
+
+    //Arena enabled
+    public $enabled = false;
+
+    //Arena active? (game running)
+    public $active = false;
 
     /*
      * Create a new arena
@@ -41,7 +53,14 @@ class Arena implements Listener{
      */
     public function addPlayer(Player $player)
     {
-        $this->players[$player->getName()] = $player;
+        if($this->enabled == true)
+        {
+            $this->players[$player->getName()] = $player;
+        }
+        else
+        {
+            $player->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."This arena is disabled.");
+        }
     }
 
     /*
@@ -53,6 +72,7 @@ class Arena implements Listener{
         if(isset($this->players[$player->getName()]))
         {
             unset($this->players[$player->getName()]);
+            $player->teleport(Server::getInstance()->getDefaultLevel()->getSafeSpawn());
             return true;
         }
         else
@@ -108,6 +128,31 @@ class Arena implements Listener{
              * Remove a player from the arena when it disconnects
              */
             $this->removePlayer($player);
+        }
+    }
+
+    public function onBreak(BlockBreakEvent $event)
+    {
+        if($this->active == false)
+        {
+            $event->setCancelled();
+        }
+        if(isset($this->players[$event->getPlayer()->getName()]))
+        {
+            if($event->getBlock()->getID() != ItemBlock::SNOW_BLOCK)
+            {
+                $event->setCancelled();
+            }
+            else
+            {
+                if($this->active == true)
+                {
+                    $block = $event->getBlock();
+                    $event->setInstaBreak(true);
+                    $block = new Position($block->getX(), $block->getY(), $block->getZ(), $block->getLevel());
+                    $this->broken[] = $block;
+                }
+            }
         }
     }
 
