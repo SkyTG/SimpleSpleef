@@ -2,10 +2,13 @@
 
 namespace SimpleSpleef\Arena;
 
+use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerDeathEvent;
+use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\level\Position;
 use pocketmine\Player;
 
-class Arena extends ArenaListener{
+class Arena implements Listener{
 
     //Name of the arena
     private $arena_name;
@@ -74,6 +77,30 @@ class Arena extends ArenaListener{
     public function setSpawn(Position $pos)
     {
         $this->spawn = $pos;
+    }
+
+    public function onDeath(PlayerDeathEvent $event)
+    {
+        $player = $event->getEntity();
+        if(isset($this->players[$player->getName()]))
+        {
+            /*
+             * Remove a player from the arena when it dies
+             */
+            $this->removePlayer($player);
+        }
+    }
+
+    public function onQuit(PlayerQuitEvent $event)
+    {
+        $player = $event->getPlayer();
+        if(isset($this->players[$player->getName()]))
+        {
+            /*
+             * Remove a player from the arena when it disconnects
+             */
+            $this->removePlayer($player);
+        }
     }
 
 } 
