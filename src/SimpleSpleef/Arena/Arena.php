@@ -7,6 +7,8 @@ use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\level\Position;
 use pocketmine\Player;
+use pocketmine\Server;
+use SimpleSpleef\Main;
 
 class Arena implements Listener{
 
@@ -19,12 +21,18 @@ class Arena implements Listener{
     //Arena spawn
     private $spawn;
 
+    //The main plugin
+    private $plugin;
+
     /*
      * Create a new arena
      */
-    public function __construct($name)
+    public function __construct($name, $spawn, Main $mainplugin)
     {
         $this->arena_name = $name;
+        $this->spawn = $spawn;
+        $this->plugin = $mainplugin;
+        Server::getInstance()->getPluginManager()->registerEvents($this, $mainplugin);
     }
 
     /*
