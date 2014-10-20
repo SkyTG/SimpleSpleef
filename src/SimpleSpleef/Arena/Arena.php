@@ -192,7 +192,7 @@ class Arena extends PluginTask implements Listener{
     /*
      * Getters
      */
-    public function getName()
+    public function getArenaName()
     {
         return $this->arena_name;
     }

@@ -21,6 +21,14 @@ class Main extends PluginBase implements Listener{
     public function onEnable()
     {
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
+
+        //Load all created arenas
+        $arenas = file_get_contents($this->getDataFolder()."/arenas.txt");
+        $arenas = explode("\n", $arenas);
+        foreach($arenas as $arena)
+        {
+            $this->loadArena($arena);
+        }
     }
 
     /*
@@ -56,10 +64,10 @@ class Main extends PluginBase implements Listener{
         {
             $arena = new Arena($name, $spawn, $this);
             $arena->setSpawn($spawn);
-            $this->arenas[$arena->getName()] = $arena;
+            $this->arenas[$arena->getArenaName()] = $arena;
             $this->saveArena($arena);
             $this->getServer()->getScheduler()->scheduleRepeatingTask($arena, 20);
-            return $this->arenas[$arena->getName()];
+            return $this->arenas[$arena->getArenaName()];
         }
         else
         {
@@ -89,7 +97,7 @@ class Main extends PluginBase implements Listener{
      */
     public function saveArena(Arena $arena)
     {
-        $name = $arena->getName();
+        $name = $arena->getArenaName();
         $spawn = $arena->getSpawn();
         //Make spawn out of string
         if($spawn instanceof Position)
@@ -104,6 +112,9 @@ class Main extends PluginBase implements Listener{
 
         $arena_data = json_encode($arena_data);
         file_put_contents($this->getDataFolder()."/arenas/".$name."/data.json", $arena_data);
+        $arenas = file_get_contents($this->getDataFolder()."/arenas.txt");
+        $arenas = $arenas."\n".$arena->getArenaName();
+        file_put_contents($this->getDataFolder()."/arenas.txt", $arenas);
     }
 
     /*
