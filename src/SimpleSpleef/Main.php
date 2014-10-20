@@ -32,6 +32,7 @@ class Main extends PluginBase {
             $arena->setSpawn($spawn);
             $this->arenas[$arena->getName()] = $arena;
             $this->saveArena($arena);
+            $this->getServer()->getScheduler()->scheduleRepeatingTask($arena, 20);
             return $this->arenas[$arena->getName()];
         }
         else
