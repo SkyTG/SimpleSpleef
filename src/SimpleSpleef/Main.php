@@ -28,7 +28,7 @@ class Main extends PluginBase {
     {
         if(!isset($this->arenas[$name]))
         {
-            $arena = new Arena($name);
+            $arena = new Arena($name, $spawn, $this);
             $arena->setSpawn($spawn);
             $this->arenas[$arena->getName()] = $arena;
             $this->saveArena($arena);

@@ -8,3 +8,6 @@ kick: false
 
 # Drop snowballs?
 drop: false
+
+# How long should an arena wait for players?
+wait: 60

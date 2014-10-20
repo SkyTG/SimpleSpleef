@@ -9,11 +9,12 @@ use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\item\ItemBlock;
 use pocketmine\level\Position;
 use pocketmine\Player;
+use pocketmine\scheduler\PluginTask;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 use SimpleSpleef\Main;
 
-class Arena implements Listener{
+class Arena extends PluginTask implements Listener{
 
     //Name of the arena
     private $arena_name;
@@ -36,6 +37,9 @@ class Arena implements Listener{
     //Arena active? (game running)
     public $active = false;
 
+    //Second
+    public $second = 60;
+
     /*
      * Create a new arena
      */
@@ -45,6 +49,49 @@ class Arena implements Listener{
         $this->spawn = $spawn;
         $this->plugin = $mainplugin;
         Server::getInstance()->getPluginManager()->registerEvents($this, $mainplugin);
+        $this->second = $this->plugin->getConfig()->get("wait");
+    }
+
+    /*
+     * Running every second
+     */
+    public function onRun($currentTick)
+    {
+        $this->second -= 1;
+        if($this->second == 10)
+        {
+            if(count($this->players) < 2)
+            {
+                foreach($this->players as $p)
+                {
+                    if($p instanceof Player)
+                    {
+                        $p->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."Not enough players.");
+                        $this->second += 30;
+                    }
+                }
+            }
+        }
+        if($this->second < 6 and $this->second > -1)
+        {
+            foreach($this->players as $p)
+            {
+                if($p instanceof Player)
+                {
+                    $p->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."Starting in ".TextFormat::GREEN. $this->second);
+                }
+            }
+        }
+        if($this->second == 0)
+        {
+            foreach ($this->players as $p)
+            {
+                if ($p instanceof Player)
+                {
+                    $this->active = true;
+                }
+            }
+        }
     }
 
     /*
