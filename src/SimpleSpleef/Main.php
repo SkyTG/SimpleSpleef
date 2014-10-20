@@ -196,17 +196,29 @@ class Main extends PluginBase implements Listener{
                         {
                             case 'join':
                                     $arena = $this->getArenaByName($args[1]);
-                                    if($arena instanceof Arena)
+                                    if($arena instanceof Arena and isset($sender->arena) == false)
                                     {
                                         $arena->addPlayer($sender);
+                                    }
+                                    else
+                                    {
+                                        $sender->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."You're already in an arena.");
                                     }
                                 break;
                             case 'leave':
                                     $arena = $sender->arena;
-                                    if($arena instanceof Arena)
+                                    if(!isset($sender->arena))
                                     {
-                                        $arena->removePlayer($sender);
+                                        $sender->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."You're not in an arena.");
                                     }
+                                    else
+                                    {
+                                        if($arena instanceof Arena)
+                                        {
+                                            $arena->removePlayer($sender);
+                                        }
+                                    }
+
                                 break;
                         }
                     }
