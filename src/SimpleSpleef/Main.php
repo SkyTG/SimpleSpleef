@@ -33,4 +33,20 @@ class Main extends PluginBase {
         }
     }
 
+    /*
+     * Get an arena by it's name
+     * Returns: Success: Arena - Failure: false
+     */
+    public function getArenaByName($name)
+    {
+        if(isset($this->arenas[$name]))
+        {
+            return $this->arenas[$name];
+        }
+        else
+        {
+            return false;
+        }
+    }
+
 } 

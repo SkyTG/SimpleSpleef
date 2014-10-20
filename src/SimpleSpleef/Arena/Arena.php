@@ -5,13 +5,13 @@ namespace SimpleSpleef\Arena;
 use pocketmine\level\Position;
 use pocketmine\Player;
 
-class Arena {
+class Arena extends ArenaListener{
 
     //Name of the arena
     private $arena_name;
 
     //Array of players that are in the arena
-    private $players = array();
+    public $players = array();
 
     //Arena spawn
     private $spawn;
