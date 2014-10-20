@@ -13,6 +13,8 @@ use pocketmine\item\ItemBlock;
 use pocketmine\level\Position;
 use pocketmine\math\Vector3;
 use pocketmine\Player;
+use pocketmine\plugin\Plugin;
+use pocketmine\plugin\PluginBase;
 use pocketmine\scheduler\PluginTask;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
@@ -47,13 +49,12 @@ class Arena extends PluginTask implements Listener{
     /*
      * Create a new arena
      */
-    public function __construct($name, $spawn, Main $mainplugin)
+    public function __construct(Main $owner, $name, $spawn)
     {
         $this->arena_name = $name;
         $this->spawn = $spawn;
-        $this->plugin = $mainplugin;
-        Server::getInstance()->getPluginManager()->registerEvents($this, $mainplugin);
-        $this->second = $this->plugin->getConfig()->get("wait");
+        $this->plugin = $this->getOwner();
+        $this->second = $this->getOwner()->getConfig()->get("wait");
     }
 
     /*
