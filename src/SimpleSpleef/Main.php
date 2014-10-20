@@ -218,7 +218,6 @@ class Main extends PluginBase implements Listener{
                                             $arena->removePlayer($sender);
                                         }
                                     }
-
                                 break;
                         }
                     }

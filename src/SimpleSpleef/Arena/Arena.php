@@ -151,13 +151,22 @@ class Arena extends PluginTask implements Listener{
     {
         if($this->enabled == true)
         {
-            $this->players[$player->getName()] = $player;
-            $player->arena = $this;
-            $player->teleport($this->getSpawn());
+            if(count($this->players) < $this->plugin->getConfig()->get("maxplayers"))
+            {
+                $this->players[$player->getName()] = $player;
+                $player->arena = $this;
+                $player->teleport($this->getSpawn());
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         else
         {
             $player->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."This arena is disabled.");
+            return false;
         }
     }
 

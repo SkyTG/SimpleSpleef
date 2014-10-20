@@ -1,5 +1,5 @@
-# Drop snowballs?
-drop: false
-
 # How long should an arena wait for players?
 wait: 60
+
+# How many players are allowed in an arena
+maxplayers: 8
