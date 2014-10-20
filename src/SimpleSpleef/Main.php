@@ -19,12 +19,14 @@ class Main extends PluginBase {
      * Create an arena
      * Returns: Arena
      */
-    public function createArena($name)
+    public function createArena($name, Position $spawn)
     {
         if(!isset($this->arenas[$name]))
         {
             $arena = new Arena($name);
+            $arena->setSpawn($spawn);
             $this->arenas[$arena->getName()] = $arena;
+            $this->saveArena($arena);
             return $this->arenas[$arena->getName()];
         }
         else
@@ -80,14 +82,9 @@ class Main extends PluginBase {
     {
         $data = file_get_contents($this->getDataFolder()."/arenas/".$name."/data.json");
         $data = json_decode($data, true);
-
-        $arena = $this->createArena($data["name"]);
-        if($arena instanceof Arena)
-        {
-            $spawn = explode(" ", $data["spawn"]);
-            $spawn = new Position($spawn[0], $spawn[1], $spawn[2], $this->getServer()->getLevelByName($spawn[3]));
-            $arena->setSpawn($spawn);
-        }
+        $spawn = explode(" ", $data["spawn"]);
+        $spawn = new Position($spawn[0], $spawn[1], $spawn[2], $this->getServer()->getLevelByName($spawn[3]));
+        $arena = $this->createArena($data["name"], $spawn);
         return $arena;
     }
 
