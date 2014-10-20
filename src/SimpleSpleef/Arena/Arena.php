@@ -5,6 +5,7 @@ namespace SimpleSpleef\Arena;
 use pocketmine\block\Block;
 use pocketmine\block\Snow;
 use pocketmine\event\block\BlockBreakEvent;
+use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\player\PlayerQuitEvent;
@@ -119,6 +120,7 @@ class Arena extends PluginTask implements Listener{
         {
             if($p instanceof Player)
             {
+                $p->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."You have won!");
                 $p->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."The round is over.");
                 $this->removePlayer($p);
             }
@@ -135,6 +137,8 @@ class Arena extends PluginTask implements Listener{
                 $level->setBlock(new Vector3($x, $y, $z), Block::get(Block::SNOW_BLOCK));
             }
         }
+        $this->second = $this->plugin->getConfig()->get("wait");
+        $this->broken = array();
         $this->active = false;
         $this->enabled = true;
     }
@@ -248,6 +252,15 @@ class Arena extends PluginTask implements Listener{
                     $this->broken[] = $block;
                 }
             }
+        }
+    }
+
+    public function onPlace(BlockPlaceEvent $event)
+    {
+        $player = $event->getPlayer();
+        if(isset($this->players[$player->getName()]))
+        {
+            $event->setCancelled();
         }
     }
 
