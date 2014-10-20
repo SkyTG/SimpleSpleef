@@ -139,6 +139,24 @@ class Main extends PluginBase {
                                                             }
                                                         }
                                                     break;
+                                                case 'state':
+                                                        if($sender instanceof Player)
+                                                        {
+                                                            $arena = $this->getArenaByName($args[3]);
+                                                            if($arena instanceof Arena)
+                                                            {
+                                                                $arena->enabled = $args[4];
+                                                                if($arena->enabled == false)
+                                                                {
+                                                                    $sender->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."Disabled arena.");
+                                                                }
+                                                                else
+                                                                {
+                                                                    $sender->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."Enabled arena.");
+                                                                }
+                                                            }
+                                                        }
+                                                    break;
                                             }
                                         break;
                                 }
