@@ -3,3 +3,6 @@ wait: 60
 
 # How many players are allowed in an arena
 maxplayers: 8
+
+# Surface material (Block that can be destroyed while in an arena
+surface: 80

@@ -247,7 +247,7 @@ class Arena extends PluginTask implements Listener{
         }
         if(isset($this->players[$event->getPlayer()->getName()]))
         {
-            if($event->getBlock()->getID() != ItemBlock::SNOW_BLOCK)
+            if($event->getBlock()->getID() != $this->plugin->getConfig()->get("surface"))
             {
                 $event->setCancelled();
             }
