@@ -41,7 +41,7 @@ class ArenaSchedule extends PluginTask {
                             {
                                 if($p instanceof Player)
                                 {
-                                    $p->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."Starting in ".TextFormat::GREEN. $this->second);
+                                    $p->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."Starting in ".TextFormat::GREEN. $arena->second);
                                 }
                             }
                         }
@@ -51,7 +51,7 @@ class ArenaSchedule extends PluginTask {
                             {
                                 if ($p instanceof Player)
                                 {
-                                    $this->active = true;
+                                    $arena->active = true;
                                 }
                             }
                         }

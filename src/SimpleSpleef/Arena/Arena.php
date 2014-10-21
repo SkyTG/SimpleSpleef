@@ -98,18 +98,26 @@ class Arena implements Listener{
     {
         if($this->enabled == true)
         {
-            if(count($this->players) < $this->plugin->getConfig()->get("maxplayers"))
+            if($this->active == false)
             {
-                $this->players[$player->getName()] = $player;
-                $player->arena = $this;
-                $player->teleport($this->getSpawn());
-                $player->prevGamemode = $player->getGamemode();
-                $player->setGamemode(0);
-                return true;
+                if(count($this->players) < $this->plugin->getConfig()->get("maxplayers"))
+                {
+                    $this->players[$player->getName()] = $player;
+                    $player->arena = $this;
+                    $player->teleport($this->getSpawn());
+                    $player->prevGamemode = $player->getGamemode();
+                    $player->setGamemode(0);
+                    $player->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."Joined arena '".$this->getArenaName()."'");
+                    return true;
+                }
+                else
+                {
+                    $player->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."This arena is full");
+                }
             }
             else
             {
-                $player->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."This arena is full");
+                $player->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."A game is already running in this arena.");
             }
         }
         else

@@ -69,6 +69,10 @@ class Main extends PluginBase implements Listener{
                     {
                         $arena->addPlayer($event->getPlayer());
                     }
+                    else
+                    {
+                        $event->getPlayer()->sendMessage("This arena wasn't found.");
+                    }
                 }
             }
         }
