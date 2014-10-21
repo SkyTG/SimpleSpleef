@@ -13,6 +13,7 @@ use pocketmine\tile\Sign;
 use pocketmine\utils\TextFormat;
 use pocketmine\utils\TextWrapper;
 use SimpleSpleef\Arena\Arena;
+use SimpleSpleef\Arena\ArenaSchedule;
 
 class Main extends PluginBase implements Listener{
 
@@ -37,6 +38,17 @@ class Main extends PluginBase implements Listener{
 
         }
 
+        //Schedule the arenas
+        $this->getServer()->getScheduler()->scheduleRepeatingTask(new ArenaSchedule($this), 20);
+
+    }
+
+    /*
+     * Returns all arenas
+     */
+    public function getAllArenas()
+    {
+        return $this->arenas;
     }
 
     /*
@@ -70,11 +82,11 @@ class Main extends PluginBase implements Listener{
     {
         if(!isset($this->arenas[$name]))
         {
-            $arena = new Arena($this, $name, $spawn);
+            $arena = new Arena($name, $spawn, $this);
             $arena->setSpawn($spawn);
+            $arena->setName($name);
             $this->arenas[$arena->getArenaName()] = $arena;
             $this->saveArena($arena);
-            $this->getServer()->getScheduler()->scheduleRepeatingTask($arena, 20);
             $this->getServer()->getPluginManager()->registerEvents($arena, $this);
             return $this->arenas[$arena->getArenaName()];
         }

@@ -20,7 +20,7 @@ use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 use SimpleSpleef\Main;
 
-class Arena extends PluginTask implements Listener{
+class Arena implements Listener{
 
     //Name of the arena
     private $arena_name;
@@ -49,67 +49,12 @@ class Arena extends PluginTask implements Listener{
     /*
      * Create a new arena
      */
-    public function __construct(Main $owner, $name, $spawn)
+    public function __construct($name, $spawn, Main $main)
     {
-        $this->arena_name = $name;
-        $this->spawn = $spawn;
-        $this->plugin = $this->getOwner();
-        $this->second = $this->getOwner()->getConfig()->get("wait");
-    }
-
-    /*
-     * Running every second
-     */
-    public function onRun($currentTick)
-    {
-        $this->second -= 1;
-        if($this->second == 10)
-        {
-            if(count($this->players) < 2)
-            {
-                foreach($this->players as $p)
-                {
-                    if($p instanceof Player)
-                    {
-                        $p->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."Not enough players.");
-                        $this->second += 30;
-                    }
-                }
-            }
-        }
-        if($this->second < 6 and $this->second > -1)
-        {
-            foreach($this->players as $p)
-            {
-                if($p instanceof Player)
-                {
-                    $p->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."Starting in ".TextFormat::GREEN. $this->second);
-                }
-            }
-        }
-        if($this->second == 0)
-        {
-            foreach ($this->players as $p)
-            {
-                if ($p instanceof Player)
-                {
-                    $this->active = true;
-                }
-            }
-        }
-        if($this->second == -180)
-        {
-            $this->resetArena();
-        }
-
-
-        if($this->second < 0)
-        {
-            if(count($this->players) < 2)
-            {
-                $this->resetArena();
-            }
-        }
+        $this->setName($name);
+        $this->setSpawn($spawn);
+        $this->plugin = $main;
+        $this->second = $this->plugin->getConfig()->get("wait");
     }
 
     /*
