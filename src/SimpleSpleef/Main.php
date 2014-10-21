@@ -217,12 +217,12 @@ class Main extends PluginBase implements Listener{
                                                                 if($arena->enabled == false)
                                                                 {
                                                                     $arena->enabled = true;
-                                                                    $sender->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."Disabled arena.");
+                                                                    $sender->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."Enabled arena.");
                                                                 }
                                                                 else
                                                                 {
                                                                     $arena->enabled = false;
-                                                                    $sender->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."Enabled arena.");
+                                                                    $sender->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."Disabled arena.");
                                                                 }
                                                             }
                                                         }
