@@ -191,6 +191,7 @@ class Main extends PluginBase implements Listener{
                                                     $sender->sendMessage(TextFormat::DARK_RED."Error while creating the arena.");
                                                 }
                                             }
+                                            return true;
                                         break;
                                     case 'edit':
                                             switch($args[2])
@@ -205,6 +206,7 @@ class Main extends PluginBase implements Listener{
                                                                 $sender->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."Set new arena spawn.");
                                                             }
                                                         }
+                                                        return true;
                                                     break;
                                                 case 'state':
                                                         if($sender instanceof Player)
@@ -212,7 +214,6 @@ class Main extends PluginBase implements Listener{
                                                             $arena = $this->getArenaByName($args[3]);
                                                             if($arena instanceof Arena)
                                                             {
-                                                                $arena->enabled = $args[4];
                                                                 if($arena->enabled == false)
                                                                 {
                                                                     $sender->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."Disabled arena.");
@@ -223,6 +224,7 @@ class Main extends PluginBase implements Listener{
                                                                 }
                                                             }
                                                         }
+                                                        return true;
                                                     break;
                                             }
                                         break;
@@ -245,6 +247,7 @@ class Main extends PluginBase implements Listener{
                                     {
                                         $sender->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."You're already in an arena.");
                                     }
+                                    return true;
                                 break;
                             case 'leave':
                                     $arena = $sender->arena;
@@ -259,6 +262,7 @@ class Main extends PluginBase implements Listener{
                                             $arena->removePlayer($sender);
                                         }
                                     }
+                                    return true;
                                 break;
                         }
                     }

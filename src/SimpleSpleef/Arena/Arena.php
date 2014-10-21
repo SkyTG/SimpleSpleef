@@ -8,6 +8,7 @@ use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerDeathEvent;
+use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\item\ItemBlock;
 use pocketmine\level\Position;
@@ -131,7 +132,7 @@ class Arena implements Listener{
         }
         else
         {
-            return false;
+            $player->sendMessage("You couldn't be removed from the arena.");
         }
     }
 
@@ -216,6 +217,22 @@ class Arena implements Listener{
         if(isset($this->players[$player->getName()]))
         {
             $event->setCancelled();
+        }
+    }
+
+    public function onMove(PlayerMoveEvent $event)
+    {
+        $player = $event->getPlayer();
+
+        //Check if player lands on ground block
+        if(isset($this->players[$player->getName()]))
+        {
+            $pos = new Vector3($player->getFloorX(), $player->getFloorY(), $player->getFloorZ());
+            $level = $player->getLevel();
+            if($level->getBlock($pos)->getID() == $this->plugin->getConfig()->get("ground"))
+            {
+                $this->removePlayer($player);
+            }
         }
     }
 
