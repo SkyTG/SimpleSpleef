@@ -7,9 +7,6 @@ maxplayers: 8
 # Surface material (Block that can be destroyed while in an arena
 surface: 80
 
-# Ground material (Player looses if lands on this block)
-ground: 35
-
 # Allow PVP in arenas?
 pvp: false
 

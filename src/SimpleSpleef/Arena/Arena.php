@@ -48,6 +48,9 @@ class Arena implements Listener{
     //Second
     public $second = 60;
 
+    //Deepest floor
+    private $floor = 0;
+
     /*
      * Create a new arena
      */
@@ -89,6 +92,22 @@ class Arena implements Listener{
         $this->broken = array();
         $this->active = false;
         $this->enabled = true;
+    }
+
+    /*
+     * Sets floor
+     */
+    public function setFloor($floor)
+    {
+        $this->floor = $floor;
+    }
+
+    /*
+     * Gets floor
+     */
+    public function getFloor()
+    {
+        return $this->floor;
     }
 
     /*
@@ -242,11 +261,12 @@ class Arena implements Listener{
         //Check if player lands on ground block
         if(isset($player->arena))
         {
-            $pos = new Vector3($player->getFloorX(), $player->getFloorY(), $player->getFloorZ());
-            $level = $player->getLevel();
-            if($level->getBlock($pos)->getID() == $this->plugin->getConfig()->get("ground"))
+            if(isset($this->players[$player->getName()]))
             {
-                $this->removePlayer($player);
+                if($player->getFloorY() == $this->getFloor())
+                {
+                    $this->removePlayer($player);
+                }
             }
         }
     }

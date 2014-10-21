@@ -232,6 +232,17 @@ class Main extends PluginBase implements Listener{
                                                         }
                                                         return true;
                                                     break;
+                                                case 'floor':
+                                                        if($sender instanceof Player)
+                                                        {
+                                                            $arena = $this->getArenaByName($args[3]);
+                                                            if($arena instanceof Arena)
+                                                            {
+                                                                $arena->setFloor($sender->getPosition()->getFloorY());
+                                                                $sender->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."Set arena floor.");
+                                                            }
+                                                        }
+                                                    break;
                                             }
                                         break;
                                 }
