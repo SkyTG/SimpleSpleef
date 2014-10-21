@@ -2,6 +2,7 @@
 
 namespace SimpleSpleef\Arena;
 
+use pocketmine\item\Item;
 use pocketmine\Player;
 use pocketmine\scheduler\PluginTask;
 use pocketmine\utils\TextFormat;
@@ -51,9 +52,12 @@ class ArenaSchedule extends PluginTask {
                             {
                                 if ($p instanceof Player)
                                 {
-                                    $arena->active = true;
+                                    $item = new Item($this->getOwner()->getConfig()->get("item"), 0, 1);
+                                    $p->breakItem = $item;
+                                    $p->getInventory()->addItem($item);
                                 }
                             }
+                            $arena->active = true;
                         }
                         if($arena->second == -180)
                         {

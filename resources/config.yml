@@ -12,3 +12,6 @@ ground: 35
 
 # Allow PVP in arenas?
 pvp: false
+
+# Item for destroying (default: Diamond Shovel)
+item: 277

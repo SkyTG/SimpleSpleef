@@ -141,6 +141,8 @@ class Arena implements Listener{
             $player->teleport(Server::getInstance()->getDefaultLevel()->getSafeSpawn());
             $player->setGamemode($player->prevGamemode);
             unset($player->prevGamemode);
+            $player->getInventory()->remove($player->breakItem);
+            unset($player->breakItem);
             return true;
         }
         else
