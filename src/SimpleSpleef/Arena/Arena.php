@@ -231,7 +231,7 @@ class Arena implements Listener{
 
     public function onBreak(BlockBreakEvent $event)
     {
-        if($this->active == false)
+        if($this->active == false and isset($this->players[$event->getPlayer()->getName()]))
         {
             $event->setCancelled();
         }
