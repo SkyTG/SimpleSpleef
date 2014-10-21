@@ -1,5 +1,5 @@
 # How long should an arena wait for players?
-wait: 60
+wait: 20
 
 # How many players are allowed in an arena
 maxplayers: 8

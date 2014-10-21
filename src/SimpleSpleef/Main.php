@@ -242,6 +242,7 @@ class Main extends PluginBase implements Listener{
                                                                 $sender->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."Set arena floor.");
                                                             }
                                                         }
+                                                        return true;
                                                     break;
                                             }
                                         break;

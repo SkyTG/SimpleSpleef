@@ -123,16 +123,25 @@ class Arena implements Listener{
                 if(count($this->players) < $this->plugin->getConfig()->get("maxplayers"))
                 {
                     $this->players[$player->getName()] = $player;
-                    $player->arena = $this;
-                    $player->teleport($this->getSpawn());
-                    $player->prevGamemode = $player->getGamemode();
-                    $player->setGamemode(0);
-                    $player->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."Joined arena '".$this->getArenaName()."'");
-                    return true;
+                    if(isset($this->players[$player->getName()]))
+                    {
+                        $player->arena = $this;
+                        $player->teleport($this->getSpawn());
+                        $player->prevGamemode = $player->getGamemode();
+                        $player->setGamemode(0);
+                        $player->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."Joined arena '".$this->getArenaName()."'");
+                        return true;
+                    }
+                    else
+                    {
+                        $player->sendMessage("Error while joining...");
+                        return false;
+                    }
                 }
                 else
                 {
                     $player->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."This arena is full");
+                    return false;
                 }
             }
             else
@@ -211,7 +220,7 @@ class Arena implements Listener{
     public function onQuit(PlayerQuitEvent $event)
     {
         $player = $event->getPlayer();
-        if(isset($player->arena))
+        if(isset($this->players[$player->getName()]))
         {
             /*
              * Remove a player from the arena when it disconnects
@@ -226,7 +235,7 @@ class Arena implements Listener{
         {
             $event->setCancelled();
         }
-        if(isset($event->getPlayer()->arena))
+        if(isset($this->players[$event->getPlayer()->getName()]))
         {
             if($event->getBlock()->getID() != $this->plugin->getConfig()->get("surface"))
             {
@@ -248,7 +257,7 @@ class Arena implements Listener{
     public function onPlace(BlockPlaceEvent $event)
     {
         $player = $event->getPlayer();
-        if(isset($player->arena))
+        if(isset($this->players[$player->getName()]))
         {
             $event->setCancelled();
         }
