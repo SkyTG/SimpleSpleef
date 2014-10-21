@@ -103,11 +103,13 @@ class Arena implements Listener{
                 $this->players[$player->getName()] = $player;
                 $player->arena = $this;
                 $player->teleport($this->getSpawn());
+                $player->prevGamemode = $player->getGamemode();
+                $player->setGamemode(0);
                 return true;
             }
             else
             {
-                return false;
+                $player->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."This arena is full");
             }
         }
         else
@@ -128,6 +130,8 @@ class Arena implements Listener{
             unset($this->players[$player->getName()]);
             unset($player->arena);
             $player->teleport(Server::getInstance()->getDefaultLevel()->getSafeSpawn());
+            $player->setGamemode($player->prevGamemode);
+            unset($player->prevGamemode);
             return true;
         }
         else
@@ -177,7 +181,7 @@ class Arena implements Listener{
     public function onQuit(PlayerQuitEvent $event)
     {
         $player = $event->getPlayer();
-        if(isset($this->players[$player->getName()]))
+        if(isset($player->arena))
         {
             /*
              * Remove a player from the arena when it disconnects
@@ -192,7 +196,7 @@ class Arena implements Listener{
         {
             $event->setCancelled();
         }
-        if(isset($this->players[$event->getPlayer()->getName()]))
+        if(isset($event->getPlayer()->arena))
         {
             if($event->getBlock()->getID() != $this->plugin->getConfig()->get("surface"))
             {
@@ -214,7 +218,7 @@ class Arena implements Listener{
     public function onPlace(BlockPlaceEvent $event)
     {
         $player = $event->getPlayer();
-        if(isset($this->players[$player->getName()]))
+        if(isset($player->arena))
         {
             $event->setCancelled();
         }
@@ -225,7 +229,7 @@ class Arena implements Listener{
         $player = $event->getPlayer();
 
         //Check if player lands on ground block
-        if(isset($this->players[$player->getName()]))
+        if(isset($player->arena))
         {
             $pos = new Vector3($player->getFloorX(), $player->getFloorY(), $player->getFloorZ());
             $level = $player->getLevel();
