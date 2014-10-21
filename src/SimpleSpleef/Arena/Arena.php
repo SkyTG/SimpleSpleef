@@ -6,6 +6,7 @@ use pocketmine\block\Block;
 use pocketmine\block\Snow;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
+use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\player\PlayerMoveEvent;
@@ -244,6 +245,21 @@ class Arena implements Listener{
             if($level->getBlock($pos)->getID() == $this->plugin->getConfig()->get("ground"))
             {
                 $this->removePlayer($player);
+            }
+        }
+    }
+
+    public function onDamage(EntityDamageEvent $event)
+    {
+        $player = $event->getEntity();
+        if($player instanceof Player)
+        {
+            if(isset($player->arena))
+            {
+                if($this->plugin->getConfig()->get("pvp") == false)
+                {
+                    $event->setCancelled();
+                }
             }
         }
     }
