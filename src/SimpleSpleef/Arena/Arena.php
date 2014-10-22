@@ -274,6 +274,13 @@ class Arena implements Listener{
             {
                 if($player->getFloorY() == $this->getFloor())
                 {
+                    foreach($this->players as $p)
+                    {
+                        if($p instanceof Player)
+                        {
+                            $p->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD.$p->getDisplayName()." lost");
+                        }
+                    }
                     $this->removePlayer($player);
                 }
             }

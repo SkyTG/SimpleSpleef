@@ -21,6 +21,8 @@ class Main extends PluginBase implements Listener{
 
     public function onEnable()
     {
+        @mkdir($this->getDataFolder());
+        $this->saveDefaultConfig();
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
 
         //Load all created arenas
@@ -243,6 +245,28 @@ class Main extends PluginBase implements Listener{
                                                             }
                                                         }
                                                         return true;
+                                                    break;
+                                                case 'start':
+                                                        if($sender instanceof Player)
+                                                        {
+                                                            $arena = $this->getArenaByName($args[3]);
+                                                            if($arena instanceof Arena)
+                                                            {
+                                                                $arena->second = 1;
+                                                                $sender->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."Started arena ".$arena->getArenaName());
+                                                            }
+                                                        }
+                                                    break;
+                                                case 'stop':
+                                                        if($sender instanceof Player)
+                                                        {
+                                                            $arena = $this->getArenaByName($args[3]);
+                                                            if($arena instanceof Arena)
+                                                            {
+                                                                $arena->resetArena();
+                                                                $sender->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."Stopped arena ".$arena->getArenaName());
+                                                            }
+                                                        }
                                                     break;
                                             }
                                         break;
