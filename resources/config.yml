@@ -12,3 +12,6 @@ pvp: false
 
 # Item for destroying (default: Diamond Shovel)
 item: 277
+
+# Display if someone wins a match
+display: true

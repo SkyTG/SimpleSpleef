@@ -72,8 +72,11 @@ class Arena implements Listener{
             if($p instanceof Player)
             {
                 $p->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."You have won!");
-                $p->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."The round is over.");
                 $this->removePlayer($p);
+                if($this->plugin->getConfig()->get("display") == true)
+                {
+                    $this->plugin->getServer()->broadcastMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD.$p->getDisplayName()." has won spleef in Arena ".$this->getArenaName());
+                }
             }
         }
         $this->enabled = false;

@@ -21,23 +21,27 @@ class Main extends PluginBase implements Listener{
 
     public function onEnable()
     {
-        @mkdir($this->getDataFolder());
-        $this->saveDefaultConfig();
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
 
         //Load all created arenas
-        $arenas = file_get_contents($this->getDataFolder()."arenas.txt");
-        if($arenas == false or $arenas == null)
-        {
-            $arenas = explode("\n", $arenas);
-            if(count($arenas) > 1)
+        try {
+            $arenas = file_get_contents($this->getDataFolder()."arenas.txt");
+            if($arenas == false or $arenas == null)
             {
-                foreach($arenas as $arena)
+                $arenas = explode("\n", $arenas);
+                if(count($arenas) > 1)
                 {
-                    $this->loadArena($arena);
+                    foreach($arenas as $arena)
+                    {
+                        $this->loadArena($arena);
+                    }
                 }
-            }
 
+            }
+        }
+        catch(\Exception $error)
+        {
+            $this->getLogger()->info(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."No arenas were found.");
         }
 
         //Schedule the arenas
@@ -313,6 +317,18 @@ class Main extends PluginBase implements Listener{
                         $sender->sendMessage(TextFormat::RED."Please run this command in-game.");
                     }
                 break;
+        }
+    }
+
+    public function onDisable()
+    {
+        $this->getLogger()->info(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."Resetting all arenas...");
+        foreach($this->arenas as $arena)
+        {
+            if($arena instanceof Arena)
+            {
+                $arena->resetArena();
+            }
         }
     }
 
