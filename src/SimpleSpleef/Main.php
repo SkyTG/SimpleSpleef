@@ -10,6 +10,7 @@ use pocketmine\level\Position;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\tile\Sign;
+use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
 use pocketmine\utils\TextWrapper;
 use SimpleSpleef\Arena\Arena;
@@ -19,24 +20,25 @@ class Main extends PluginBase implements Listener{
 
     private $arenas = array();
 
+    private $files = array();
+
     public function onEnable()
     {
+        if(!file_exists($this->getDataFolder()."config.yml"))
+        {
+            $this->saveDefaultConfig();
+        }
+        $this->files["list"] = new Config($this->getDataFolder()."arenas.txt", Config::ENUM);
+        $this->files["list"]->save();
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
 
         //Load all created arenas
         try {
-            $arenas = file_get_contents($this->getDataFolder()."arenas.txt");
-            if($arenas == false or $arenas == null)
+            $arenas = $this->getResource($this->getDataFolder()."arenas.txt");
+            $arenas = explode("\n", $arenas);
+            foreach($arenas as $arena)
             {
-                $arenas = explode("\n", $arenas);
-                if(count($arenas) > 1)
-                {
-                    foreach($arenas as $arena)
-                    {
-                        $this->loadArena($arena);
-                    }
-                }
-
+                $this->loadArena($arena);
             }
         }
         catch(\Exception $error)
@@ -146,14 +148,26 @@ class Main extends PluginBase implements Listener{
             $arena_data = array(
                 "name" => $name,
                 "spawn" => $spawn_loc,
-                "level" => $spawn_level
+                "level" => $spawn_level,
+                "floor" => $arena->getFloor()
             );
 
             $arena_data = json_encode($arena_data);
-            file_put_contents($this->getDataFolder()."arenas/".$name."/data.json", $arena_data);
-            $arenas = file_get_contents($this->getDataFolder()."arenas.txt");
+            $this->files[$arena->getArenaName()] = new Config($this->getDataFolder()."arenas/".$name."/data.json", Config::JSON);
+            $arena_config = $this->files[$arena->getArenaName()];
+            if($arena_config instanceof Config)
+            {
+                $arena_config->set($arena_data);
+            }
+            $arena_config->save();
+            $arenas = $this->getResource($this->getDataFolder()."arenas.txt");
             $arenas = $arenas."\n".$arena->getArenaName();
-            file_put_contents($this->getDataFolder()."arenas.txt", $arenas);
+            $listconf = $this->files["list"];
+            if($listconf instanceof Config)
+            {
+                $listconf->set($arenas);
+                $listconf->save();
+            }
         }
     }
 
@@ -168,6 +182,7 @@ class Main extends PluginBase implements Listener{
         $spawn = explode(" ", $data["spawn"]);
         $spawn = new Position($spawn[0], $spawn[1], $spawn[2], $this->getServer()->getLevelByName($data["level"]));
         $arena = $this->createArena($data["name"], $spawn);
+        $this->getLogger()->info("Loading arena ".$arena->getArenaName());
         return $arena;
     }
 
