@@ -281,7 +281,7 @@ class Arena implements Listener{
                     {
                         if($p instanceof Player)
                         {
-                            $p->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD.$p->getDisplayName()." lost");
+                            $p->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD.$player->getDisplayName()." lost");
                         }
                     }
                     $this->removePlayer($player);
