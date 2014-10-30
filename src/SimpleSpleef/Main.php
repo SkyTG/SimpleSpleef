@@ -27,9 +27,22 @@ class Main extends PluginBase implements Listener{
         if(!file_exists($this->getDataFolder()."config.yml"))
         {
             $this->saveDefaultConfig();
+            $conf = new Config($this->getDataFolder()."arenas.txt", Config::ENUM);
+            $conf->save();
+        }
+
+        if(!file_exists($this->getDataFolder() . "arenas/"))
+        {
+            @mkdir($this->getDataFolder() . "arenas/");
         }
 
         //Also load stuff here :(
+        $arenas = $this->getResource($this->getDataFolder()."arena.txt");
+        $arenas = explode("\n", $arenas);
+        foreach($arenas as $arena)
+        {
+            $this->loadArena($arena);
+        }
 
         //Schedule the arenas
         $this->getServer()->getScheduler()->scheduleRepeatingTask(new ArenaSchedule($this), 20);
@@ -138,7 +151,15 @@ class Main extends PluginBase implements Listener{
             );
 
             //Still have to do this (TODO)
-
+            $arenas = "";
+            foreach($this->arenas as $arena)
+            {
+                if($arena instanceof Arena)
+                {
+                    $arenas .= $arena->getArenaName()."\n";
+                }
+            }
+            $res = $this->saveResource($this->getDataFolder()."arenas.txt", true);
         }
     }
 
@@ -153,6 +174,10 @@ class Main extends PluginBase implements Listener{
         $spawn = explode(" ", $data["spawn"]);
         $spawn = new Position($spawn[0], $spawn[1], $spawn[2], $this->getServer()->getLevelByName($data["level"]));
         $arena = $this->createArena($data["name"], $spawn);
+        if($arena instanceof Arena)
+        {
+            $arena->setFloor($data["floor"]);
+        }
         $this->getLogger()->info("Loading arena ".$arena->getArenaName());
         return $arena;
     }
