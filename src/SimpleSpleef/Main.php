@@ -28,23 +28,8 @@ class Main extends PluginBase implements Listener{
         {
             $this->saveDefaultConfig();
         }
-        $this->files["list"] = new Config($this->getDataFolder()."arenas.txt", Config::ENUM);
-        $this->files["list"]->save();
-        $this->getServer()->getPluginManager()->registerEvents($this, $this);
 
-        //Load all created arenas
-        try {
-            $arenas = $this->getResource($this->getDataFolder()."arenas.txt");
-            $arenas = explode("\n", $arenas);
-            foreach($arenas as $arena)
-            {
-                $this->loadArena($arena);
-            }
-        }
-        catch(\Exception $error)
-        {
-            $this->getLogger()->info(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."No arenas were found.");
-        }
+        //Also load stuff here :(
 
         //Schedule the arenas
         $this->getServer()->getScheduler()->scheduleRepeatingTask(new ArenaSchedule($this), 20);
@@ -152,22 +137,8 @@ class Main extends PluginBase implements Listener{
                 "floor" => $arena->getFloor()
             );
 
-            $arena_data = json_encode($arena_data);
-            $this->files[$arena->getArenaName()] = new Config($this->getDataFolder()."arenas/".$name."/data.json", Config::JSON);
-            $arena_config = $this->files[$arena->getArenaName()];
-            if($arena_config instanceof Config)
-            {
-                $arena_config->set($arena_data);
-            }
-            $arena_config->save();
-            $arenas = $this->getResource($this->getDataFolder()."arenas.txt");
-            $arenas = $arenas."\n".$arena->getArenaName();
-            $listconf = $this->files["list"];
-            if($listconf instanceof Config)
-            {
-                $listconf->set($arenas);
-                $listconf->save();
-            }
+            //Still have to do this (TODO)
+
         }
     }
 
