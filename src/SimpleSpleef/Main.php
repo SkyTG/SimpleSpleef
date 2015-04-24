@@ -19,8 +19,6 @@ class Main extends PluginBase implements Listener
 
     private $arenas = array();
 
-    private $files = array();
-
     public function onEnable()
     {
 

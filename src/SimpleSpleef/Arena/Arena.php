@@ -3,7 +3,6 @@
 namespace SimpleSpleef\Arena;
 
 use pocketmine\block\Block;
-use pocketmine\block\Snow;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\entity\EntityDamageEvent;
@@ -11,13 +10,9 @@ use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\player\PlayerQuitEvent;
-use pocketmine\item\ItemBlock;
 use pocketmine\level\Position;
 use pocketmine\math\Vector3;
 use pocketmine\Player;
-use pocketmine\plugin\Plugin;
-use pocketmine\plugin\PluginBase;
-use pocketmine\scheduler\PluginTask;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 use SimpleSpleef\Main;
