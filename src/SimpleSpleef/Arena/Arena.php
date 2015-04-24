@@ -130,8 +130,6 @@ class Arena implements Listener{
                     {
                         $player->arena = $this;
                         $player->teleport($this->getSpawn());
-                        $player->prevGamemode = $player->getGamemode();
-                        $player->setGamemode(0);
                         $player->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."Joined arena '".$this->getArenaName()."'");
                         return true;
                     }
@@ -170,10 +168,11 @@ class Arena implements Listener{
             unset($this->players[$player->getName()]);
             unset($player->arena);
             $player->teleport(Server::getInstance()->getDefaultLevel()->getSafeSpawn());
-            $player->setGamemode($player->prevGamemode);
-            unset($player->prevGamemode);
-            $player->getInventory()->remove($player->breakItem);
-            unset($player->breakItem);
+            if(isset($player->breakItem))
+            {
+                $player->getInventory()->remove($player->breakItem);
+                unset($player->breakItem);
+            }
             return true;
         }
         else

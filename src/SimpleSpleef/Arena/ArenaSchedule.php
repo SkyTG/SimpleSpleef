@@ -31,9 +31,9 @@ class ArenaSchedule extends PluginTask {
                                     if($p instanceof Player)
                                     {
                                         $p->sendMessage(TextFormat::AQUA."[SimpleSpleef] ".TextFormat::GOLD."Not enough players.");
-                                        $arena->second += 10;
                                     }
                                 }
+                                $arena->second += 10;
                             }
                         }
                         if($arena->second < 6 and $arena->second > -1)

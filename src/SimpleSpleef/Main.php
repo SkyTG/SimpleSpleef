@@ -10,13 +10,12 @@ use pocketmine\level\Position;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\tile\Sign;
-use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
-use pocketmine\utils\TextWrapper;
 use SimpleSpleef\Arena\Arena;
 use SimpleSpleef\Arena\ArenaSchedule;
 
-class Main extends PluginBase implements Listener{
+class Main extends PluginBase implements Listener
+{
 
     private $arenas = array();
 
@@ -24,26 +23,34 @@ class Main extends PluginBase implements Listener{
 
     public function onEnable()
     {
+
+        @mkdir($this->getDataFolder()."arenas/");
+
         if(!file_exists($this->getDataFolder()."config.yml"))
         {
-            $this->saveDefaultConfig();
-            $conf = new Config($this->getDataFolder()."arenas.txt", Config::ENUM);
-            $conf->save();
+            @mkdir($this->getDataFolder());
+            file_put_contents($this->getDataFolder()."config.yml", $this->getResource("config.yml"));
         }
 
-        if(!file_exists($this->getDataFolder() . "arenas/"))
+        if(!file_exists($this->getDataFolder()."arenas.txt"))
         {
-            @mkdir($this->getDataFolder() . "arenas/");
+            @mkdir($this->getDataFolder());
+            file_put_contents($this->getDataFolder()."arenas.txt", $this->getResource("arenas.txt"));
         }
 
-        //Also load stuff here :(
-        $arenas = $this->getResource($this->getDataFolder()."arena.txt");
-        $arenas = explode("\n", $arenas);
-        foreach($arenas as $arena)
+
+        if(file_exists($this->getDataFolder()."arenas/"))
         {
-            $this->loadArena($arena);
+            foreach(scandir($this->getDataFolder()."arenas/") as $file)
+            {
+                if(is_file($this->getDataFolder()."arenas/".$file))
+                {
+                    $this->loadArena($file);
+                }
+            }
         }
 
+        $this->getServer()->getPluginManager()->registerEvents($this, $this);
         //Schedule the arenas
         $this->getServer()->getScheduler()->scheduleRepeatingTask(new ArenaSchedule($this), 20);
 
@@ -86,7 +93,6 @@ class Main extends PluginBase implements Listener{
 
     /*
      * Create an arena
-     * Returns: Arena
      */
     public function createArena($name, Position $spawn)
     {
@@ -108,7 +114,6 @@ class Main extends PluginBase implements Listener{
 
     /*
      * Get an arena by it's name
-     * Returns: Arena
      */
     public function getArenaByName($name)
     {
@@ -124,7 +129,6 @@ class Main extends PluginBase implements Listener{
 
     /*
      * Save an arenas data as json in the resources
-     * Returns: void
      */
     public function saveArena(Arena $arena)
     {
@@ -150,26 +154,19 @@ class Main extends PluginBase implements Listener{
                 "floor" => $arena->getFloor()
             );
 
-            //Still have to do this (TODO)
-            $arenas = "";
-            foreach($this->arenas as $arena)
-            {
-                if($arena instanceof Arena)
-                {
-                    $arenas .= $arena->getArenaName()."\n";
-                }
-            }
-            $res = $this->saveResource($this->getDataFolder()."arenas.txt", true);
+            $res = json_encode($arena_data);
+
+            @mkdir($this->getDataFolder()."arenas/");
+            file_put_contents($this->getDataFolder()."arenas/".$name.".json", $res);
         }
     }
 
     /*
      * Load a saved arena
-     * Returns: Arena
      */
     public function loadArena($name)
     {
-        $data = file_get_contents($this->getDataFolder()."arenas/".$name."/data.json");
+        $data = file_get_contents($this->getDataFolder()."arenas/".$name);
         $data = json_decode($data, true);
         $spawn = explode(" ", $data["spawn"]);
         $spawn = new Position($spawn[0], $spawn[1], $spawn[2], $this->getServer()->getLevelByName($data["level"]));
@@ -178,7 +175,8 @@ class Main extends PluginBase implements Listener{
         {
             $arena->setFloor($data["floor"]);
         }
-        $this->getLogger()->info("Loading arena ".$arena->getArenaName());
+        $arena->enabled = true;
+        $this->getLogger()->info("Loaded arena ".$arena->getArenaName());
         return $arena;
     }
 
